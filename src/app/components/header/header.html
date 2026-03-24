@@ -1,0 +1,28 @@
+<header class="header">
+    <div class="header__container">
+        <input type="checkbox" 
+            class="header__menu" 
+            id="open-menu">
+        <label for="open-menu" 
+            class="header__nav-button" 
+            role="button"><span class="hamburger-icon">☰</span>
+        </label>
+
+        
+            <img class="header__logo" src="/logovet.png" alt="logo veterinaria">
+        
+        <input class="header__search" type="search" placeholder="Buscar turno por nombre ..." id="search">
+
+            <nav class="header__nav">
+                <ul class="header__nav-list">
+                    <li class="header__nav-item"><a routerLink="/dashboard">Dashboard</a></li>
+                    <li class="header__nav-item"><a  routerLink="/turnos">Turnos</a></li>
+                </ul>
+            </nav>
+
+            <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="servicioHeader.mostrarFormulario.set(true)" class="header__button">
+                <span>+</span> Agregar Turno
+            </button>
+        
+    </div>
+</header>
