@@ -4,5 +4,6 @@ export interface Form {
     nombre:string;
     dueno: string;
     razon: 'vacunacion' | 'medicacion' | 'otros';
-    confirmar:boolean;
+    id: number;
+    estado: string;
 }

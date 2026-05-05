@@ -22,56 +22,6 @@
 
     <div class="appointment-today">
         <h2 class="appointment__title fw-bold"><i class="fa-solid fa-calendar-days" style="color: #0891b2;"></i> Turnos De Hoy</h2>
-        
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        
-            <div class="modal-dialog">
-                <article class="modal-content">
-                    <header class="modal-header">
-                        <h2 class="modal-title" id="staticBackdropLabel">Formulario Turnos</h2>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </header>
-                    <section class="modal-body">
-                        @if (servicioDashboard.mostrarFormulario()) {
-                        <form [formGroup]="form">
-                            <div>
-                                <label for="fecha">Fecha</label>
-                                <input type="date" id="fecha" formControlName="fecha">
-                            </div>
-
-                            <div>
-                                <label for="hora">Hora</label>
-                                <input id="hora" type="time" formControlName="hora">
-                            </div>
-                            <div>
-                                <label for="nombre">Nombre de la Mascota</label>
-                                <input id="nombre" type="text" formControlName="nombre">
-                            </div>
-                            <div>
-                                <label for="dueno" >Dueño</label>
-                                <input id="dueno" type="text" formControlName="dueno">
-                            </div>
-                            <div>
-                                <label for="razon" >Razón</label>
-                                <select id="razon" formControlName="razon">
-                                    <option value="" disabled selected>-- Seleccioná una razón --</option>
-                                    <option value="vacunacion">Vacunacion</option>
-                                    <option value="medicacion">Medicacion</option>
-                                    <option value="otros">Otros</option>
-                                </select>
-                            </div>
-        
-                            <button type="button" class="btn__modal-save" (click)="save()">Guardar Turno</button>
-                        </form>
-                        }
-                    </section>
-                </article>
-            </div>
-        </div>
-
-
-
     <div class="table-container">
         <table class="appointment__table">
             <thead>
@@ -85,7 +35,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for (turno of servicioDashboard.turnos(); track $index){
+                @for (turno of paginatedItems; track $index){
                 <tr class="appointment__table-row">
                     <td class="appointment__table-col">{{turno.fecha}}</td>
                     <td class="appointment__table-col">{{turno.hora}}</td>
@@ -94,9 +44,17 @@
                     <td class="appointment__table-col">{{turno.razon}}</td>
                     <td class="appointment__table-col">
                         <div class="actions">
-                            <button class="btn-action btn__confirm" (click)="servicioDashboard.confirmar($index)" ><i class="fa-solid fa-check"></i> Atendido</button>
-                            <button class="btn-action btn__edit"><i class="fa-solid fa-pen"></i> Editar</button>
-                            <button class="btn-action btn__delete"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                            <button class="btn-action btn__confirm" (click)="servicioDashboard.confirmar(turno.id)">
+                                <i class="fa-solid fa-check"></i> Atendido
+                            </button>
+                            @if (turno.estado !== 'atendido') {
+                                <button class="btn-action btn__edit" (click)="servicioDashboard.edit(turno)">
+                                    <i class="fa-solid fa-pen"></i> Editar
+                                </button>
+                                <button class="btn-action btn__delete" (click)="servicioDashboard.cancel(turno.id)">
+                                    <i class="fa-solid fa-trash"></i> Cancelar
+                                </button>
+                            }
                         </div>
                     </td>
                 </tr>
@@ -105,11 +63,16 @@
         </table>
         <nav>
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Siguiente</a>
+                <li class="page-item" [class.actived]="currentPage === 1">
+                    <a class="page-link"  (click)="changePage(currentPage - 1)">Anterior</a>
+                </li>
+                @for (p of pages; track p) {
+                <li class="page-item" [class.actived]="p === currentPage">
+                    <a class="page-link"(click)="changePage(p)">{{ p }}</a>
+                </li>
+                }
+                <li class="page-item" [class.actived]="currentPage === total">
+                    <a class="page-link" (click)="changePage(currentPage + 1)">Siguiente</a>
                 </li>
             </ul>
         </nav>

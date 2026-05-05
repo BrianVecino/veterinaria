@@ -1,11 +1,12 @@
 import { Component, inject} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TurnosService } from '../../servicios/turnos';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule],
+  imports: [RouterModule,ReactiveFormsModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

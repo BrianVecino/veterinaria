@@ -1,17 +1,8 @@
 <header class="header">
     <div class="header__container">
-        <input type="checkbox" 
-            class="header__menu" 
-            id="open-menu">
-        <label for="open-menu" 
-            class="header__nav-button" 
-            role="button"><span class="hamburger-icon">☰</span>
-        </label>
-
-        
             <img class="header__logo" src="/logovet.png" alt="logo veterinaria">
         
-        <input class="header__search" type="search" placeholder="Buscar turno por nombre ..." id="search">
+        <input (input)="servicioHeader.search.set($event.target.value)" class="header__search" type="search" placeholder="Buscar turno por nombre ..." id="search">
 
             <nav class="header__nav">
                 <ul class="header__nav-list">
@@ -19,10 +10,60 @@
                     <li class="header__nav-item"><a  routerLink="/turnos">Turnos</a></li>
                 </ul>
             </nav>
-
             <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="servicioHeader.mostrarFormulario.set(true)" class="header__button">
                 <span>+</span> Agregar Turno
             </button>
-        
+            <input type="checkbox" 
+            class="header__menu" 
+            id="open-menu">
+        <label for="open-menu" 
+            class="header__nav-button" 
+            role="button"><span class="hamburger-icon">☰</span>
+        </label>
     </div>
 </header>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <article class="modal-content">
+            <header class="modal-header">
+                <h2 class="modal-title" id="staticBackdropLabel">Formulario Turnos</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="servicioHeader.reset()"></button>
+            </header>
+            <section class="modal-body">
+                @if (servicioHeader.mostrarFormulario()) {
+                <form [formGroup]="servicioHeader.form">
+                    <div>
+                        <label for="fecha">Fecha</label>
+                        <input type="date" id="fecha" formControlName="fecha">
+                    </div>
+                    <div>
+                        <label for="hora">Hora</label>
+                        <input id="hora" type="time" formControlName="hora">
+                    </div>
+                    <div>
+                        <label for="nombre">Nombre de la Mascota</label>
+                        <input id="nombre" type="text" formControlName="nombre">
+                    </div>
+                    <div>
+                        <label for="dueno">Dueño</label>
+                        <input id="dueno" type="text" formControlName="dueno">
+                    </div>
+                    <div>
+                        <label for="razon">Razón</label>
+                        <select id="razon" formControlName="razon">
+                            <option value="" disabled selected>-- Seleccioná una razón --</option>
+                            <option value="vacunacion">Vacunacion</option>
+                            <option value="medicacion">Medicacion</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn__modal-save" (click)="servicioHeader.save()">Guardar Turno</button>
+                </form>
+                }
+            </section>
+        </article>
+    </div>
+</div>

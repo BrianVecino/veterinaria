@@ -1,9 +1,8 @@
-import { Component, computed, inject, signal, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { TurnosService } from '../../servicios/turnos';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import { Modal } from 'bootstrap';
-import { Form } from '../../models/form';
+
 
 
 @Component({
@@ -14,37 +13,29 @@ import { Form } from '../../models/form';
   encapsulation: ViewEncapsulation.None
 })
 export class Dashboard {
-    servicioDashboard = inject(TurnosService);
+  servicioDashboard = inject(TurnosService);
 
-    private fb = inject(FormBuilder);
+  currentPage = 1;
+  itemsPerPage = 8;
 
-    form = this.fb.group({
-      fecha:['',Validators.required],
-      hora:['', Validators.required],
-      nombre: ['',Validators.required],
-      dueno: ['',Validators.required],
-      razon: ['',Validators.required]
-    })
-
-    save(){
-      if (this.form.valid) {
-
-      const nuevoTurnos = {
-      ...this.form.getRawValue() as Form,
-      confirmar: false
-};
-  
-    
-      this.servicioDashboard.turnos.update(x =>[...x, nuevoTurnos]);
-
-      this.servicioDashboard.mostrarFormulario.set(false);
-      this.form.reset();
-
-      const modal = Modal.getInstance(document.getElementById('staticBackdrop')!);
-      modal?.hide();
-      document.body.classList.remove('modal-open');
-      document.querySelector('.modal-backdrop')?.remove();
-
-    }
+get paginatedItems() {
+  const start = (this.currentPage - 1) * this.itemsPerPage;
+  const end = start + this.itemsPerPage;
+  return this.servicioDashboard.turnosDashboard().slice(start, end);
 }
+
+get total() {
+  return Math.ceil(this.servicioDashboard.turnosDashboard().length / this.itemsPerPage);
+}
+
+changePage(page: number) {
+  if (page < 1 || page > this.total) return;
+  this.currentPage = page
+}
+
+get pages() {
+  return Array.from({length: this.total},
+  (_,i) => i + 1);
+}
+
 }

@@ -1,0 +1,93 @@
+.wrapper {
+    background-color: #f0f4f8;
+    width: 100%;
+}
+
+.h1__title {
+    font-size: 1.8rem;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 15px 5px 0 0;
+    text-wrap: pretty;
+}
+
+/* Tabla */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 12px;
+}
+
+.appointment__table {
+    width: 100%;
+    max-width: 1500px;
+    border-collapse: collapse;
+    margin: 20px auto;
+    font-size: 1.2rem;
+    background-color: #fffd;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px 1px rgba(0, 0, 0, 0.346);
+}
+
+.appointment__table-header {
+    background-color: #0891b2;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.appointment__table-col {
+    padding: 10px 10px;
+    border:  1px solid #333;
+}
+
+.appointment__table-row {
+    text-align: center;
+    border-bottom: 1px solid #333;
+    font-size: 1.1rem;
+}
+
+.appointment__table-row:nth-child(even) {
+    background-color: #f0f4f8;
+}
+
+.appointment__table-row td:first-child {
+    color: #0891b2; 
+}
+
+/* Estado */
+
+.estado-atendido { 
+    color: #08b26b; 
+    font-weight: 700; 
+}
+
+.estado-pendiente {
+    color: #f76f0f;
+    font-weight: 700;
+}
+
+.estado-cancelado {
+    color: #ee2236;
+    font-weight: 700;
+}
+
+/* Pagination */
+
+.pagination .page-link {
+    background-color: #0891b2;
+    color :#fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #044c5e;
+    color: #fff;
+}
+
+.page-item{
+    cursor: pointer;
+}
+.actived .page-link{
+    background-color: #044c5e;
+}

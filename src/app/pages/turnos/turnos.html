@@ -1,1 +1,49 @@
-<h1>Historial de turnos</h1>
+<div class="wrapper">
+    <h1 class="h1__title fw-bold"><i class="fa-solid fa-book-medical" style="color: #0891b2;"></i> Historial de Turnos</h1>
+        <div class="table-container">
+        <table class="appointment__table">
+            <thead>
+                <tr class="appointment__table-header">
+                    <th class="appointment__table-col">Fecha</th>
+                    <th class="appointment__table-col">Hora</th>
+                    <th class="appointment__table-col">Nombre</th>
+                    <th class="appointment__table-col">Dueño</th>
+                    <th class="appointment__table-col">Razon</th>
+                    <th class="appointment__table-col">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (turno of paginatedItems; track $index){
+                <tr class="appointment__table-row">
+                    <td class="appointment__table-col">{{turno.fecha}}</td>
+                    <td class="appointment__table-col">{{turno.hora}}</td>
+                    <td class="appointment__table-col">{{turno.nombre}}</td>
+                    <td class="appointment__table-col">{{turno.dueno}}</td>
+                    <td class="appointment__table-col">{{turno.razon}}</td>
+                    <td class="appointment__table-col"
+                        [class.estado-atendido]="turno.estado === 'atendido'"
+                        [class.estado-pendiente]="turno.estado === 'pendiente'"
+                        [class.estado-cancelado]="turno.estado === 'cancelado'"]>
+                        {{turno.estado}}
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" [class.actived]="currentPage === 1">
+                    <a class="page-link"  (click)="changePage(currentPage - 1)">Anterior</a>
+                </li>
+                @for (p of pages; track p) {
+                <li class="page-item" [class.actived]="p === currentPage">
+                    <a class="page-link"(click)="changePage(p)">{{ p }}</a>
+                </li>
+                }
+                <li class="page-item" [class.actived]="currentPage === total">
+                    <a class="page-link" (click)="changePage(currentPage + 1)">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+        </div>    
+</div>
