@@ -118,6 +118,7 @@
 }
 
 .header__nav-button {
+    position: absolute;
     top: 1rem;
     right: 1rem;
     z-index: 30;

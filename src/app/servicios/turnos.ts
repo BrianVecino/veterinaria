@@ -2,6 +2,7 @@ import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { Form } from '../models/form';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
+import { Supabase } from './supabase';
 
 
 @Injectable({
@@ -9,10 +10,12 @@ import { Modal } from 'bootstrap';
 })
 export class TurnosService {
     mostrarFormulario = signal(false);
-    turnos= signal<Form[]>(JSON.parse(localStorage.getItem('turnos') ?? '[]'));
+    turnos= signal<Form[]>([]);
     search = signal('');
     editingAppointment = signal<Form | null>(null);
     fb = inject(FormBuilder);
+    supa = inject(Supabase)
+
 
   searchButton = computed (() => {
     const text = this.search().toLowerCase();
@@ -32,9 +35,15 @@ export class TurnosService {
     })
 
     constructor () {
-      effect(() => {
-        localStorage.setItem('turnos', JSON.stringify(this.turnos()))
-      }) 
+      this.cargarTurnos();
+    }
+
+    async cargarTurnos() {
+      const data = await this.supa.getTurnos();
+      if (data) {
+        this.turnos.set(data);
+        this.ordenar();
+      }
     }
 
     turnosDashboard = computed(() => {
@@ -77,31 +86,33 @@ export class TurnosService {
       return this.turnosDashboard().filter(x => x.estado === 'pendiente')
     })
 
-    confirmar(id:number) {
-      this.turnos.update(x => x.map((turno) =>
-        turno.id === id ? {...turno, estado: 'atendido' } : turno
-    )
-  )
+    async confirmar(id: number) {
+      await this.supa.actualizarEstado(id, 'atendido');
+      this.turnos.update(x => x.map(turno =>
+        turno.id === id ? { ...turno, estado: 'atendido' } : turno
+      ));
     }
 
-
-    save(){
+    async save(){
       if (this.form.valid) {
         if (this.editingAppointment()){
+
+          const id = this.editingAppointment()!.id;
+          await this.supa.editarTurno(id, this.form.getRawValue() as Form);
           this.turnos.update(x => x.map(turno =>
-            turno.id === this.editingAppointment()!.id
-            ? {...turno, ...this.form.getRawValue() as Form}
-            : turno
+            turno.id === id ? { ...turno, ...this.form.getRawValue() as Form } : turno
           ));
           this.editingAppointment.set(null);
         }else {
           const nuevoTurnos = {
             ...this.form.getRawValue() as Form,
-            id: Date.now(),
             estado: 'pendiente'
         };
 
-        this.turnos.update(x =>[...x, nuevoTurnos]);
+        const guardado = await this.supa.agregarTurno(nuevoTurnos);
+        if (guardado) {
+          this.turnos.update(x =>[...x, guardado]);
+        }
         }
       this.ordenar()
       this.mostrarFormulario.set(false);
@@ -115,6 +126,20 @@ export class TurnosService {
       
     }}
     
+
+    async cancel(id: number) {
+    await this.supa.actualizarEstado(id, 'cancelado');
+    this.turnos.update(x => x.map(x =>
+      x.id === id ? { ...x, estado: 'cancelado' } : x
+    ));
+  }
+
+
+
+
+
+
+
 
   ordenar() {
   this.turnos.update(x => [...x].sort((a, b) => {
@@ -132,18 +157,11 @@ export class TurnosService {
     const modal = Modal.getInstance(modalEl) || new Modal(modalEl);
     modal.show();
     
-  }  
+  }
 
   reset (){
     this.editingAppointment.set(null)
     this.form.reset();
-  }
-
-
-  cancel(id: number) {
-    this.turnos.update(x => x.map(x =>
-      x.id === id ? {...x, estado: 'cancelado'} : x
-    ));
   }
 
 

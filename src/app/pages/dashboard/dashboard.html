@@ -75,57 +75,10 @@
         </nav>
     </div>    
     </div>
-<!--
-    <div class="appointment-pendients">
-        <h2 class="appointment__title fw-bold"><i class="fa-solid fa-calendar-days" style="color: #f97316;"></i> Turnos Por Confirmar</h2>
-
-        <div class="table-container">
-        <table class="appointment__table">
-            <thead>
-                <tr class="appointment__table-header">
-                    <th class="appointment__table-col">Hora</th>
-                    <th class="appointment__table-col">Nombre</th>
-                    <th class="appointment__table-col">Razon</th>
-                    <th class="appointment__table-col">Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="appointment__table-row">
-                    <td class="appointment__table-col">11:30</td>
-                    <td class="appointment__table-col">Cody</td>
-                    <td class="appointment__table-col">Revision</td>
-                    <td class="appointment__table-col">
-                        <div class="actions">
-                            <button class="btn-action btn-delete">Eliminar</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr class="appointment__table-row">
-                    <td class="appointment__table-col">12:30</td>
-                    <td class="appointment__table-col">Cody</td>
-                    <td class="appointment__table-col">Vacunacion</td>
-                    <td class="appointment__table-col">
-                        <div class="actions">
-                            <button class="btn-action btn-delete">Eliminar</button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <nav>
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Siguiente</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    </div>
--->
 </section>
+
+@for (p of listaTurnos; track p) {
+<div>
+    <p>{{ p.nombre}}</p>
+</div>
+}

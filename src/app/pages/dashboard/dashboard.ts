@@ -1,7 +1,7 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { TurnosService } from '../../servicios/turnos';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { Supabase } from '../../servicios/supabase';
 
 
 
@@ -12,7 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   styleUrl: './dashboard.css',
   encapsulation: ViewEncapsulation.None
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   servicioDashboard = inject(TurnosService);
 
   currentPage = 1;
@@ -38,4 +38,18 @@ get pages() {
   (_,i) => i + 1);
 }
 
+listaTurnos: any = null;
+
+  constructor(private supabase: Supabase) {}
+
+  async ngOnInit() {
+    console.log('Iniciando prueba de conexión...');
+    try {
+      const data = await this.supabase.getTurnos();
+      this.listaTurnos = data;
+      console.log('¡Éxito! Datos recibidos de Supabase:', data);
+    } catch (error) {
+      console.error('❌ Error crítico al conectar con Supabase:', error);
+    }
+  }
 }
